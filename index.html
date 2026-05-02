@@ -1,0 +1,690 @@
+<DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><h1>HTML Basics — Code Playground</h1></title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:        #4a5591;
+      --surface:   #13151f;
+      --panel:     #3d4568;
+      --border:    #252a3a;
+      --accent:    #5dffc0;
+      --accent2:   #ac9cf8;
+      --accent3:   #fb923c;
+      --text:      #e8eaf0;
+      --muted:     #a6bff1;
+      --tag:       #5dffc0;
+      --keyword:   #a78bfa;
+      --string:    #fb923c;
+      --comment:   #4b5563;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      font-family: 'Syne', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow: hidden;
+    }
+
+    /* ── Animated background ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 50% at 15% 20%, rgba(93,255,192,.06) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 40% at 85% 80%, rgba(167,139,250,.07) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── Layout ── */
+    .app {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-rows: 56px 1fr;
+      height: 100vh;
+    }
+
+    /* ── Top bar ── */
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 28px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      gap: 16px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -.3px;
+      white-space: nowrap;
+    }
+
+    .logo-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 10px var(--accent);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%,100% { opacity: 1; transform: scale(1); }
+      50%      { opacity: .5; transform: scale(.7); }
+    }
+
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--muted);
+    }
+
+    .breadcrumb span { color: var(--accent); }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      background: rgba(93,255,192,.1);
+      color: var(--accent);
+      border: 1px solid rgba(93,255,192,.2);
+    }
+
+    /* ── Main split ── */
+    .split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    /* ── Tutorial panel ── */
+    .tutorial-panel {
+      overflow-y: auto;
+      padding: 36px 40px 40px;
+      border-right: 1px solid var(--border);
+      scrollbar-width: thin;
+      scrollbar-color: var(--border) transparent;
+    }
+
+    .tutorial-panel::-webkit-scrollbar { width: 4px; }
+    .tutorial-panel::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+    article {
+      max-width: 520px;
+    }
+
+    .lesson-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 14px;
+    }
+
+    article h1 {
+      font-size: 32px;
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -1px;
+      margin-bottom: 18px;
+      background: linear-gradient(135deg, #fff 40%, var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    article > p {
+      font-size: 15px;
+      line-height: 1.75;
+      color: #9ca3af;
+      margin-bottom: 28px;
+    }
+
+    /* Section blocks */
+    .section {
+      margin-bottom: 32px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .section-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--accent);
+      background: rgba(93,255,192,.08);
+      border: 1px solid rgba(93,255,192,.2);
+      border-radius: 4px;
+      padding: 2px 7px;
+    }
+
+    .section h2 {
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: -.3px;
+      color: var(--text);
+    }
+
+    .section p {
+      font-size: 14px;
+      line-height: 1.75;
+      color: #9ca3af;
+      margin-bottom: 14px;
+    }
+
+    /* Inline code */
+    code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12.5px;
+      background: rgba(167,139,250,.12);
+      color: var(--accent2);
+      padding: 1px 6px;
+      border-radius: 4px;
+      border: 1px solid rgba(167,139,250,.18);
+    }
+
+    /* Pre / syntax block */
+    .code-block {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 14px;
+    }
+
+    .code-block-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 9px 14px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255,255,255,.02);
+    }
+
+    .code-block-lang {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: .5px;
+    }
+
+    .dots { display: flex; gap: 5px; }
+    .dot  { width: 8px; height: 8px; border-radius: 50%; }
+    .dot-r { background: #ff5f57; }
+    .dot-y { background: #febc2e; }
+    .dot-g { background: #28c840; }
+
+    pre {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      line-height: 1.7;
+      padding: 16px;
+      overflow-x: auto;
+      color: var(--text);
+    }
+
+    pre .tag     { color: var(--tag); }
+    pre .attr    { color: var(--accent2); }
+    pre .string  { color: var(--string); }
+    pre .comment { color: var(--comment); }
+
+    /* Tip callout */
+    .tip {
+      display: flex;
+      gap: 12px;
+      background: rgba(93,255,192,.05);
+      border: 1px solid rgba(93,255,192,.15);
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-bottom: 14px;
+    }
+
+    .tip-icon {
+      font-size: 16px;
+      flex-shrink: 0;
+      line-height: 1.75;
+    }
+
+    .tip p {
+      font-size: 13.5px;
+      color: #a7f3d0;
+      margin-bottom: 0;
+    }
+
+    /* ── Playground panel ── */
+    .playground-panel {
+      display: grid;
+      grid-template-rows: auto 1fr auto 1fr;
+      overflow: hidden;
+      background: var(--surface);
+    }
+
+    .panel-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 18px;
+      border-bottom: 1px solid var(--border);
+      background: var(--panel);
+    }
+
+    .panel-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+      letter-spacing: .5px;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .panel-title-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--accent3);
+    }
+
+    .panel-title-dot.green { background: var(--accent); }
+
+    .run-btn {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-family: 'Syne', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .3px;
+      color: #0d0e14;
+      background: var(--accent);
+      border: none;
+      border-radius: 7px;
+      padding: 7px 18px;
+      cursor: pointer;
+      transition: transform .15s, box-shadow .15s, filter .15s;
+      box-shadow: 0 0 18px rgba(93,255,192,.25);
+    }
+
+    .run-btn:hover {
+      filter: brightness(1.1);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 22px rgba(93,255,192,.4);
+    }
+
+    .run-btn:active { transform: translateY(0); }
+
+    .run-btn svg {
+      width: 13px; height: 13px;
+      fill: #0d0e14;
+    }
+
+    /* Textarea editor */
+    .editor-wrap {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .line-numbers {
+      position: absolute;
+      top: 0; left: 0; bottom: 0;
+      width: 40px;
+      background: rgba(0,0,0,.2);
+      border-right: 1px solid var(--border);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--comment);
+      padding: 16px 0;
+      text-align: right;
+      padding-right: 10px;
+      pointer-events: none;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    #code-editor {
+      width: 100%;
+      height: 100%;
+      resize: none;
+      background: transparent;
+      border: none;
+      outline: none;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--text);
+      padding: 16px 16px 16px 56px;
+      caret-color: var(--accent);
+      tab-size: 2;
+    }
+
+    #code-editor::selection { background: rgba(93,255,192,.15); }
+
+    /* Output iframe */
+    .output-wrap {
+      overflow: hidden;
+    }
+
+    #output {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: #fff;
+    }
+
+    /* Status bar */
+    .status-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 5px 18px;
+      background: rgba(93,255,192,.06);
+      border-top: 1px solid rgba(93,255,192,.1);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--accent);
+      letter-spacing: .4px;
+    }
+
+    #status-msg { transition: opacity .3s; }
+
+    /* Divider label */
+    .output-label {
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* Scrollbar for editor */
+    #code-editor::-webkit-scrollbar { width: 4px; }
+    #code-editor::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .split { grid-template-columns: 1fr; grid-template-rows: 1fr 1fr; }
+      .tutorial-panel { border-right: none; border-bottom: 1px solid var(--border); }
+      html, body { overflow: auto; }
+      .app { height: auto; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ── Header ── -->
+  <header>
+    <div class="logo">
+      <div class="logo-dot"></div>
+      DevLearn
+    </div>
+    <div class="breadcrumb">
+      HTML / <span><h2>Lesson 01</h2></span> / Basics
+    </div>
+    <div class="header-actions">
+      <span class="badge">v1.0</span>
+    </div>
+  </header>
+
+  <!-- ── Split layout ── -->
+  <div class="split">
+
+    <!-- ── Tutorial ── -->
+    <aside class="tutorial-panel">
+      <article>
+        <div class="lesson-label"><h1>Lesson 01 — Foundations</h1></div>
+        <h1>HTML Basics</h1>
+        <p><h2>
+          HTML (HyperText Markup Language) is the skeleton of every webpage. It uses
+          <strong style="color:var(--text)">tags</strong> to wrap content and give it meaning.
+          Edit the live playground on the right to see your changes instantly.</h2>
+        </p>
+
+        <div class="section">
+          <div class="section-header">
+            <span class="section-num">01</span>
+            <h1>Document Structure</h1>
+          </div>
+          <p><h3>Every HTML file starts with a doctype declaration and wraps content in
+          <code>&lt;html&gt;</code>, <code>&lt;head&gt;</code>, and <code>&lt;body&gt;</code> tags.</h3></p>
+          <div class="code-block">
+            <div class="code-block-header">
+              <div class="dots">
+                <div class="dot dot-r"></div>
+                <div class="dot dot-y"></div>
+                <div class="dot dot-g"></div>
+              </div>
+              <span class="code-block-lang">html</span>
+            </div><h1>
+            <pre><span class="comment">&lt;!-- Basic skeleton --&gt;</span>
+<span class="tag">&lt;!DOCTYPE</span> <span class="attr">html</span><span class="tag">&gt;</span>
+<span class="tag">&lt;html&gt;</span>
+  <span class="tag">&lt;head&gt;</span>
+    <span class="tag">&lt;title&gt;</span>Page Title<span class="tag">&lt;/title&gt;</span>
+  <span class="tag">&lt;/head&gt;</span>
+  <span class="tag">&lt;body&gt;</span>
+    <span class="comment">&lt;!-- content here --&gt;</span>
+  <span class="tag">&lt;/body&gt;</span>
+<span class="tag">&lt;/html&gt;</span></pre></h1>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-header">
+            <span class="section-num">02</span>
+            <h2>Headings &amp; Paragraphs</h2>
+          </div>
+          <p><h3>Use <code>&lt;h1&gt;</code>–<code>&lt;h6&gt;</code> for headings (h1 = largest) and
+          <code>&lt;p&gt;</code> for body text.</h3></p>
+          <div class="code-block">
+            <div class="code-block-header">
+              <div class="dots">
+                <div class="dot dot-r"></div>
+                <div class="dot dot-y"></div>
+                <div class="dot dot-g"></div>
+              </div>
+              <span class="code-block-lang">html</span>
+            </div><h2>
+            <pre><span class="tag">&lt;h1&gt;</span>Main Heading<span class="tag">&lt;/h1&gt;</span>
+<span class="tag">&lt;h2&gt;</span>Sub Heading<span class="tag">&lt;/h2&gt;</span>
+<span class="tag">&lt;p&gt;</span>A paragraph of text.<span class="tag">&lt;/p&gt;</span></pre></h2>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-header">
+            <span class="section-num">03</span>
+            <h2>Links &amp; Images</h2>
+          </div>
+          <p><h3>The <code>&lt;a&gt;</code> tag creates hyperlinks using the <code>href</code> attribute.
+          The <code>&lt;img&gt;</code> tag embeds images with <code>src</code> and <code>alt</code>.</h3></p>
+          <div class="code-block">
+            <div class="code-block-header">
+              <div class="dots">
+                <div class="dot dot-r"></div>
+                <div class="dot dot-y"></div>
+                <div class="dot dot-g"></div>
+              </div>
+              <span class="code-block-lang">html</span>
+            </div><h2>
+            <pre><span class="tag">&lt;a</span> <span class="attr">href=</span><span class="string">"https://example.com"</span><span class="tag">&gt;</span>
+  Visit Example
+<span class="tag">&lt;/a&gt;</span>
+
+<span class="tag">&lt;img</span> <span class="attr">src=</span><span class="string">"photo.jpg"</span>
+     <span class="attr">alt=</span><span class="string">"Description"</span><span class="tag">&gt;</span></pre></h2>
+          </div>
+        </div>
+
+        <div class="tip">
+          <div class="tip-icon">💡</div>
+          <p><h3>Try modifying the code in the editor — change a heading, add a new paragraph,
+          or swap a color. Click <strong style="color:#fff">Run Code</strong> to preview.</h3></p>
+        </div>
+
+      </article>
+    </aside>
+
+    <!-- ── Playground ── -->
+    <section class="playground-panel">
+
+      <!-- Editor bar -->
+      <div class="panel-bar">
+        <div class="panel-title">
+          <div class="panel-title-dot"></div>
+          Editor
+        </div>
+        <button class="run-btn" onclick="runCode()" id="run-btn">
+          <svg viewBox="0 0 16 16"><path d="M3 2.5l10 5.5-10 5.5V2.5z"/></svg>
+          Run Code
+        </button>
+      </div>
+
+      <!-- Code textarea -->
+      <div class="editor-wrap">
+        <div class="line-numbers" id="line-numbers">1</div>
+        <textarea id="code-editor" spellcheck="false" autocorrect="off" autocapitalize="off">&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;title&gt;My Page&lt;/title&gt;
+  &lt;style&gt;
+    body {
+      font-family: Georgia, serif;
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 0 20px;
+      color: #222;
+    }
+    h1 { color: #7c3aed; }
+    a  { color: #059669; }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+
+  &lt;h1&gt;Hello, World! 👋&lt;/h1&gt;
+  &lt;h2&gt;About HTML&lt;/h2&gt;
+  &lt;p&gt;
+    HTML is the &lt;strong&gt;building block&lt;/strong&gt; of
+    every webpage. Edit this code and click Run!
+  &lt;/p&gt;
+
+  &lt;h3&gt;Useful Links&lt;/h3&gt;
+  &lt;ul&gt;
+    &lt;li&gt;&lt;a href="#"&gt;HTML Reference&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="#"&gt;CSS Guide&lt;/a&gt;&lt;/li&gt;
+    &lt;li&gt;&lt;a href="#"&gt;JavaScript Basics&lt;/a&gt;&lt;/li&gt;
+  &lt;/ul&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;</textarea>
+      </div>
+
+      <!-- Output bar -->
+      <div class="panel-bar output-label">
+        <div class="panel-title">
+          <div class="panel-title-dot green"></div>
+          Output Preview
+        </div>
+        <div class="status-bar" style="background:transparent;border:none;padding:0;">
+          <span id="status-msg">Ready</span>
+        </div>
+      </div>
+
+      <!-- Output iframe -->
+      <div class="output-wrap">
+        <iframe id="output" title="Code output preview"></iframe>
+      </div>
+
+    </section>
+
+  </div>
+</div>
+
+<script>
+  /* ── Run code ── */
+  function runCode() {
+    const code = document.getElementById('code-editor').value;
+    const iframe = document.getElementById('output');
+    const msg    = document.getElementById('status-msg');
+    const btn    = document.getElementById('run-btn');
+
+    iframe.srcdoc = code;
+
+    btn.textContent = '✓ Ran';
+    btn.style.background = '#a78bfa';
+    msg.textContent = 'Last run: ' + new Date().toLocaleTimeString();
+
+    setTimeout(() => {
+      btn.innerHTML = `<svg viewBox="0 0 16 16" style="width:13px;height:13px;fill:#0d0e14"><path d="M3 2.5l10 5.5-10 5.5V2.5z"/></svg> Run Code`;
+      btn.style.background = 'var(--accent)';
+    }, 1200);
+  }
+
+  /* ── Line numbers ── */
+  function updateLineNumbers() {
+    const ta   = document.getElementById('code-editor');
+    const ln   = document.getElementById('line-numbers');
+    const lines = ta.value.split('\n').length;
+    ln.innerHTML = Array.from({length: lines}, (_, i) => i + 1).join('<br>');
+    // Sync scroll
+    ln.scrollTop = ta.scrollTop;
+  }
+
+  const editor = document.getElementById('code-editor');
+  editor.addEventListener('input',  updateLineNumbers);
+  editor.addEventListener('scroll', () => {
+    document.getElementById('line-numbers').scrollTop = editor.scrollTop;
+  });
+
+  /* ── Tab key support ── */
+  editor.addEventListener('keydown', e => {
+    if (e.key === 'Tab') {
+      e.preventDefault();
+      const s = editor.selectionStart;
+      const v = editor.value;
+      editor.value = v.slice(0, s) + '  ' + v.slice(editor.selectionEnd);
+      editor.selectionStart = editor.selectionEnd = s + 2;
+      updateLineNumbers();
+    }
+    /* Ctrl/Cmd+Enter to run */
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') runCode();
+  });
+
+  /* ── Init ── */
+  updateLineNumbers();
+  runCode();
+</script>
+</body>
+</html>
